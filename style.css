@@ -1,0 +1,143 @@
+body{
+
+    font-family: Arial;
+    background:#f0f8ff;
+
+    text-align:center;
+
+}
+
+
+.game{
+
+    width:400px;
+
+    margin:50px auto;
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:20px;
+
+}
+
+
+h1{
+
+    color:#ff9800;
+
+}
+
+
+button{
+
+    width:300px;
+
+    padding:20px;
+
+    margin:10px;
+
+    font-size:20px;
+
+    border-radius:15px;
+
+    border:none;
+
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    transform:scale(1.05);
+
+}
+
+
+#question{
+
+    font-size:40px;
+
+    margin:30px;
+
+}
+
+
+#answers button{
+
+    background:#4caf50;
+
+    color:white;
+
+}
+
+
+#result{
+
+    font-size:25px;
+
+    margin:20px;
+
+}
+
+
+#picture{
+
+    font-size:50px;
+
+    margin-top:20px;
+
+}
+
+
+#answers button{
+
+    width:120px;
+
+    height:70px;
+
+    font-size:30px;
+
+    margin:8px;
+
+    background:#4caf50;
+
+    color:white;
+
+}
+
+
+#result{
+
+    min-height:40px;
+
+    font-weight:bold;
+
+}
+
+
+#finish{
+
+    font-size:25px;
+
+}
+
+
+#finalStar{
+
+    font-size:50px;
+
+    margin:20px;
+
+}
+
+
+#finish button{
+
+    background:#ff9800;
+
+    color:white;
+
+}
