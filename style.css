@@ -10,15 +10,19 @@ body{
 
 .game{
 
-    width:400px;
+    width:90%;
 
-    margin:50px auto;
+    max-width:400px;
+
+    margin:30px auto;
 
     background:white;
 
-    padding:30px;
+    padding:20px;
 
     border-radius:20px;
+
+    box-sizing:border-box;
 
 }
 
@@ -139,5 +143,66 @@ button:hover{
     background:#ff9800;
 
     color:white;
+
+}
+
+/* Mobile */
+
+@media screen and (max-width:600px){
+
+
+    h1{
+
+        font-size:28px;
+
+    }
+
+
+    h2{
+
+        font-size:22px;
+
+    }
+
+
+    button{
+
+        width:90%;
+
+        padding:15px;
+
+        font-size:18px;
+
+    }
+
+
+    #question{
+
+        font-size:32px;
+
+        margin:20px;
+
+    }
+
+
+    #answers button{
+
+        width:40%;
+
+        height:60px;
+
+        font-size:25px;
+
+        margin:5px;
+
+    }
+
+
+    #picture{
+
+        font-size:35px;
+
+    }
+
 
 }
