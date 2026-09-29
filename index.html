@@ -1,823 +1,443 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nhạc Vàng Lofi App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BeHocCong Music</title>
+  <meta name="theme-color" content="#0d0e15">
+  
+  <!-- PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BeHocCong">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #0b0c10;
+      color: #f3f4f6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(22, 24, 35, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .disc-spin {
+      animation: spin 18s linear infinite;
+    }
+    .disc-paused {
+      animation-play-state: paused;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     
-    <!-- PWA Primary Meta Tags -->
-    <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="Trình phát nhạc cá nhân BeHocCong-1-to-20 - Chạy độc lập như App trên Điện thoại & Máy tính">
-    
-    <!-- iOS / Safari Standalone Mobile App Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Nhạc Lofi">
-    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=180&h=180&fit=crop">
-
-    <!-- Android / Chrome Standalone Meta Tags -->
-    <meta name="mobile-web-app-capable" content="yes">
-
-    <!-- Dynamic Inline Web App Manifest Data URI for Full Standalone PWA Support -->
-    <link rel="manifest" id="pwa-manifest">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f5f3ff',
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            900: '#4c1d95',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Font Awesome Icons & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #090d16;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.15) 0px, transparent 50%);
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            overflow-x: hidden;
-            overscroll-behavior-y: none;
-        }
-
-        html {
-            height: -webkit-fill-available;
-        }
-
-        /* Glassmorphism Panels */
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card:active, .glass-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(167, 139, 250, 0.3);
-        }
-
-        /* Vinyl Spin Animation */
-        @keyframes vinyl-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .rotate-vinyl {
-            animation: vinyl-spin 22s linear infinite;
-        }
-
-        .paused-vinyl {
-            animation-play-state: paused;
-        }
-
-        /* Safe area padding for notch & home bar in Standalone Mobile Mode */
-        .safe-top {
-            padding-top: env(safe-area-inset-top, 16px);
-        }
-        .safe-bottom {
-            padding-bottom: env(safe-area-inset-bottom, 16px);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 99px;
-        }
-
-        /* Custom Sliders */
-        input[type=range] {
-            -webkit-appearance: none;
-            background: transparent;
-        }
-        input[type=range]:focus {
-            outline: none;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            height: 6px;
-            cursor: pointer;
-            border-radius: 9999px;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 18px;
-            width: 18px;
-            border-radius: 50%;
-            background: #a78bfa;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -6px;
-            box-shadow: 0 0 12px rgba(167, 139, 250, 0.8);
-            transition: transform 0.15s ease;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-        }
-    </style>
+    /* Custom Seekbar with YouTube Buffer bar */
+    .range-slider-container {
+      position: relative;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .buffered-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 9999px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6, #d946ef);
+      border-radius: 9999px;
+      width: 0%;
+    }
+    input[type=range] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 10;
+    }
+  </style>
 </head>
-<body class="text-slate-100 flex flex-col items-center justify-between min-h-screen safe-top safe-bottom p-3 sm:p-6 select-none">
+<body class="flex flex-col min-h-screen justify-between p-3 sm:p-6 md:p-8 max-w-6xl mx-auto">
 
-    <!-- Top App Navigation / Status Bar -->
-    <header class="w-full max-w-5xl flex items-center justify-between py-2 px-3 mb-2 glass-panel rounded-2xl">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                <i class="fa-solid fa-compact-disc text-xl text-white"></i>
-            </div>
-            <div>
-                <h1 class="text-base font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-200">BeHocCong Music</h1>
-                <p id="app-mode-badge" class="text-[10px] text-slate-400 flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Native Web App Mode
-                </p>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-2">
-            <!-- Install App Button (Visible on Browsers supporting install prompt or iOS guide) -->
-            <button id="btn-install-pwa" class="hidden text-xs bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold px-3 py-2 rounded-xl shadow-lg shadow-purple-600/30 flex items-center gap-2 transition transform active:scale-95">
-                <i class="fa-solid fa-download"></i>
-                <span>Cài Đặt App</span>
-            </button>
-            <button id="btn-ios-guide" class="text-xs bg-white/10 hover:bg-white/20 text-slate-200 px-3 py-2 rounded-xl border border-white/10 flex items-center gap-1.5 transition">
-                <i class="fa-solid fa-mobile-screen"></i>
-                <span class="hidden sm:inline">Thêm ra Màn hình chính</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- PWA Install Modal / iOS Guide Banner -->
-    <div id="ios-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-panel p-6 rounded-3xl max-w-md w-full border border-purple-500/30 text-center relative">
-            <button id="btn-close-ios-modal" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="w-16 h-16 bg-purple-600/20 rounded-2xl border border-purple-500/40 flex items-center justify-center mx-auto mb-4 text-purple-400 text-2xl">
-                <i class="fa-solid fa-mobile-screen-button"></i>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">Cài Đặt Web App Độc Lập</h3>
-            <p class="text-xs text-slate-300 leading-relaxed mb-4">
-                Để ứng dụng ẩn hoàn toàn khung đường link, thanh công cụ trình duyệt và chạy full màn hình giống App thật:
-            </p>
-            <div class="text-left bg-slate-900/60 p-4 rounded-2xl text-xs space-y-3 mb-5 border border-white/5 text-slate-300">
-                <div class="flex items-start gap-3">
-                    <span class="bg-purple-600 text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">1</span>
-                    <span>Trên <b>iOS Safari</b>: Nhấn nút <b>Chia sẻ (Share)</b> <i class="fa-solid fa-share-from-square text-purple-400"></i> ở chân màn hình.</span>
-                </div>
-                <div class="flex items-start gap-3">
-                    <span class="bg-purple-600 text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">2</span>
-                    <span>Chọn <b>"Thêm vào Màn hình chính" (Add to Home Screen)</b> <i class="fa-solid fa-plus-square text-purple-400"></i>.</span>
-                </div>
-                <div class="flex items-start gap-3">
-                    <span class="bg-purple-600 text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">3</span>
-                    <span>Mở App trực tiếp từ icon ở màn hình chính để dùng Full Screen không lộ link.</span>
-                </div>
-            </div>
-            <button id="btn-understand" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-xs shadow-lg shadow-purple-600/30">
-                Đã Rõ
-            </button>
-        </div>
+  <!-- Header -->
+  <header class="flex items-center justify-between py-3 mb-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-violet-500/20">
+        <i class="fa-solid font-bold fa-compact-disc text-white text-xl"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-lg leading-none tracking-tight">BeHocCong Music</h1>
+        <span class="text-xs text-emerald-400 flex items-center gap-1 mt-1 font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Offline Ready
+        </span>
+      </div>
     </div>
+  </header>
 
-    <!-- Main Application Container -->
-    <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-4 my-auto flex-1">
+  <!-- Main Content -->
+  <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto">
+    
+    <!-- Player Section -->
+    <section class="lg:col-span-7 flex flex-col items-center justify-center glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+      
+      <!-- Ambient Glow -->
+      <div class="absolute -top-24 -left-24 w-60 h-60 bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-fuchsia-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- Player Section -->
-        <section class="lg:col-span-7 glass-panel rounded-3xl p-5 sm:p-7 flex flex-col justify-between items-center text-center relative overflow-hidden">
-            
-            <!-- Dynamic Background Glow -->
-            <div class="absolute -top-24 -left-24 w-60 h-60 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <!-- Status Badge -->
+      <div class="mb-6">
+        <span id="playing-status" class="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-gray-300">
+          Đang dừng
+        </span>
+      </div>
 
-            <!-- Song Info -->
-            <div class="w-full z-10">
-                <div id="status-pill" class="inline-flex items-center gap-2 text-[11px] font-medium text-purple-300 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 mb-3">
-                    <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
-                    Sẵn sàng phát nhạc
-                </div>
-                <h2 id="song-title" class="text-xl sm:text-2xl font-bold text-white tracking-wide truncate px-2">Đang tải bài hát...</h2>
-                <p id="song-artist" class="text-slate-400 text-xs sm:text-sm mt-1">BeHocCong Collection</p>
-            </div>
+      <!-- Vinyl Disc Visualizer -->
+      <div class="relative my-4 flex items-center justify-center">
+        <div id="vinyl-disc" class="w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-neutral-900 border-4 border-neutral-800 shadow-2xl flex items-center justify-center disc-spin disc-paused relative">
+          <!-- Groove Lines -->
+          <div class="absolute inset-2 rounded-full border border-neutral-800/60"></div>
+          <div class="absolute inset-6 rounded-full border border-neutral-800/80"></div>
+          <div class="absolute inset-10 rounded-full border border-neutral-800/60"></div>
+          <div class="absolute inset-14 rounded-full border border-neutral-800/40"></div>
+          
+          <!-- Center Vinyl Label -->
+          <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-violet-600 to-fuchsia-600 flex items-center justify-center shadow-inner text-white">
+            <i class="fa-solid fa-music text-2xl"></i>
+          </div>
+          <!-- Center Hole -->
+          <div class="absolute w-4 h-4 bg-black rounded-full border-2 border-neutral-700"></div>
+        </div>
+      </div>
 
-            <!-- Vinyl Disc Visualizer -->
-            <div class="relative my-6 group z-10">
-                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 blur-xl opacity-30 group-hover:opacity-50 transition duration-500"></div>
-                
-                <div id="cd-disc" class="w-48 h-48 sm:w-60 sm:h-60 rounded-full bg-slate-950 border-4 border-slate-800 shadow-2xl relative flex items-center justify-center rotate-vinyl paused-vinyl transition-transform">
-                    <div class="absolute inset-2 rounded-full border border-slate-800/80"></div>
-                    <div class="absolute inset-6 rounded-full border border-slate-800/60"></div>
-                    <div class="absolute inset-12 rounded-full border border-slate-800/40"></div>
-                    
-                    <img id="song-cover" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&auto=format&fit=crop&q=80" alt="Cover" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-900 shadow-inner">
-                    
-                    <div class="absolute w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-950 border-2 border-slate-700 flex items-center justify-center">
-                        <div class="w-2 h-2 rounded-full bg-slate-900"></div>
-                    </div>
-                </div>
-            </div>
+      <!-- Song Title & Artist -->
+      <div class="text-center mt-6 mb-4 w-full px-4">
+        <h2 id="song-title" class="text-xl sm:text-2xl font-bold text-white tracking-wide truncate">--</h2>
+        <p id="song-artist" class="text-sm text-gray-400 mt-1 truncate">--</p>
+      </div>
 
-            <!-- Progress Bar -->
-            <div class="w-full z-10 px-1">
-                <div class="flex justify-between text-xs text-slate-400 font-mono mb-1.5">
-                    <span id="current-time">00:00:00</span>
-                    <span id="total-duration">00:00:00</span>
-                </div>
-                
-                <div class="relative flex items-center">
-                    <input type="range" id="progress-bar" value="0" min="0" max="100" class="w-full">
-                </div>
-                
-                <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
-                    <span class="flex items-center gap-1 text-purple-400">
-                        <i class="fa-solid fa-hard-drive"></i> PWA Local State
-                    </span>
-                    <span class="text-slate-500">Auto Save Seek Position</span>
-                </div>
-            </div>
+      <!-- Progress Bar (With YouTube-like Buffer Indicator) -->
+      <div class="w-full mt-2">
+        <div class="range-slider-container" id="seekbar-container">
+          <div class="buffered-bar" id="buffered-bar"></div>
+          <div class="progress-bar" id="progress-bar"></div>
+          <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1">
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mt-2 font-mono">
+          <span id="current-time">00:00:00</span>
+          <span id="total-duration">00:00:00</span>
+        </div>
+      </div>
 
-            <!-- Controls -->
-            <div class="w-full mt-5 flex flex-col gap-3 z-10">
-                <div class="flex items-center justify-center gap-3 sm:gap-6">
-                    <button id="btn-shuffle" title="Trộn bài" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition hover:bg-white/5">
-                        <i class="fa-solid fa-shuffle text-base"></i>
-                    </button>
+      <!-- Player Controls -->
+      <div class="flex items-center justify-center gap-4 sm:gap-6 mt-6 w-full">
+        <!-- Shuffle -->
+        <button id="btn-shuffle" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition">
+          <i class="fa-solid fa-shuffle text-sm"></i>
+        </button>
 
-                    <button id="btn-prev" title="Bài trước" class="w-12 h-12 rounded-full flex items-center justify-center text-slate-200 hover:text-white hover:bg-white/10 transition active:scale-90">
-                        <i class="fa-solid fa-backward-step text-xl"></i>
-                    </button>
+        <!-- Previous -->
+        <button id="btn-prev" class="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95">
+          <i class="fa-solid fa-backward-step text-base"></i>
+        </button>
 
-                    <button id="btn-play" title="Phát / Tạm dừng" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400 text-white flex items-center justify-center shadow-lg shadow-purple-600/40 transform active:scale-95 transition">
-                        <i id="play-icon" class="fa-solid fa-play text-2xl ml-1"></i>
-                    </button>
+        <!-- Play Button -->
+        <button id="btn-play" class="w-14 h-14 rounded-full bg-gradient-to-tr from-violet-600 to-fuchsia-600 hover:scale-105 flex items-center justify-center text-white shadow-lg shadow-violet-500/30 transition active:scale-95">
+          <i class="fa-solid fa-play text-xl ml-0.5"></i>
+        </button>
 
-                    <button id="btn-next" title="Bài kế tiếp" class="w-12 h-12 rounded-full flex items-center justify-center text-slate-200 hover:text-white hover:bg-white/10 transition active:scale-90">
-                        <i class="fa-solid fa-forward-step text-xl"></i>
-                    </button>
+        <!-- Pause Button -->
+        <button id="btn-pause" class="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition active:scale-95">
+          <i class="fa-solid fa-pause text-xl"></i>
+        </button>
 
-                    <button id="btn-loop" title="Lặp bài" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition hover:bg-white/5">
-                        <i class="fa-solid fa-repeat text-base"></i>
-                    </button>
-                </div>
+        <!-- Next -->
+        <button id="btn-next" class="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95">
+          <i class="fa-solid fa-forward-step text-base"></i>
+        </button>
 
-                <!-- Volume Control -->
-                <div class="flex items-center justify-center gap-3 w-3/4 sm:w-1/2 mx-auto pt-1">
-                    <button id="btn-mute" class="text-slate-400 hover:text-white transition">
-                        <i id="volume-icon" class="fa-solid fa-volume-high text-xs"></i>
-                    </button>
-                    <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="0.85" class="w-full">
-                </div>
-            </div>
+        <!-- Repeat -->
+        <button id="btn-repeat" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition">
+          <i class="fa-solid fa-repeat text-sm"></i>
+        </button>
+      </div>
 
-        </section>
+    </section>
 
-        <!-- Playlist Sidebar Section -->
-        <section class="lg:col-span-5 glass-panel rounded-3xl p-5 flex flex-col h-[400px] lg:h-auto overflow-hidden">
-            <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-list-music text-purple-400"></i>
-                    <h3 class="font-bold text-sm text-white">Danh Sách Phát</h3>
-                </div>
-                <span id="playlist-count" class="text-[11px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-0.5 rounded-full font-mono">13 bài</span>
-            </div>
+    <!-- Playlist Section -->
+    <section class="lg:col-span-5 glass-card rounded-3xl p-6 flex flex-col h-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-lg text-white">Danh Sách Phát</h3>
+        <span class="text-xs bg-white/10 text-gray-300 px-2.5 py-1 rounded-full font-medium">3 bài</span>
+      </div>
 
-            <!-- Search input in playlist -->
-            <div class="relative mb-3">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
-                <input type="text" id="search-input" placeholder="Tìm kiếm bài hát..." class="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500/50">
-            </div>
+      <!-- Song List -->
+      <div id="playlist" class="flex flex-col gap-2 overflow-y-auto max-h-[400px] lg:max-h-full pr-1">
+        <!-- Dynamic JS Render -->
+      </div>
+    </section>
 
-            <!-- Song List Container -->
-            <div id="playlist-container" class="flex-1 overflow-y-auto space-y-2 pr-1">
-                <!-- Dynamic Songs Rendered Here -->
-            </div>
-        </section>
+  </main>
 
-    </main>
+  <audio id="audio-player" preload="metadata"></audio>
 
-    <!-- Footer Standalone App Tag -->
-    <footer class="w-full max-w-5xl text-center py-2 text-[11px] text-slate-500">
-        BeHocCong-1-to-20 PWA • Standalone Web App Mode
-    </footer>
+  <script>
+    const SONGS = [
+      {
+        id: 0,
+        title: "999 Đóa Hồng",
+        artist: "Lâm Trí Hải - Long Nhật",
+        src: "music/999DoaHong-LamTriHaiLongNhat-2450373.mp3"
+      },
+      {
+        id: 1,
+        title: "Bước Chân Lẻ Loi",
+        artist: "Đan Trường",
+        src: "music/BuocChanLeLoi-DanTruong_3tvaj.mp3"
+      },
+      {
+        id: 2,
+        title: "Còn Lại Một Mình",
+        artist: "Đan Trường",
+        src: "music/ConLaiMotMinh-DanTruong_3kavx.mp3"
+      }
+    ];
 
-    <!-- Audio Element -->
-    <audio id="audio-player" preload="metadata"></audio>
+    let currentIndex = 0;
+    let isPlaying = false;
+    let isShuffle = false;
+    let isRepeat = false;
 
-    <script>
-        /* ====================================================================
-           1. PWA MANIFEST & SERVICE WORKER REGISTRATION (DYNAMIC INLINE)
-           ==================================================================== */
-        
-        // Generate Dynamic Web App Manifest Data URI for Full Standalone Capabilities
-        const manifestData = {
-            name: "Nhạc Vàng Lofi - BeHocCong",
-            short_name: "Nhạc Lofi",
-            description: "Trình phát nhạc cá nhân chạy độc lập như Native App",
-            start_url: "./",
-            display: "standalone",
-            orientation: "portrait",
-            background_color: "#090d16",
-            theme_color: "#0f172a",
-            icons: [
-                {
-                    src: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=192&h=192&fit=crop",
-                    sizes: "192x192",
-                    type: "image/png"
-                },
-                {
-                    src: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=512&h=512&fit=crop",
-                    sizes: "512x512",
-                    type: "image/png"
-                }
-            ]
-        };
-        
-        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
-        document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
+    // DOM Elements
+    const audio = document.getElementById('audio-player');
+    const songTitle = document.getElementById('song-title');
+    const songArtist = document.getElementById('song-artist');
+    const btnPlay = document.getElementById('btn-play');
+    const btnPause = document.getElementById('btn-pause');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnShuffle = document.getElementById('btn-shuffle');
+    const btnRepeat = document.getElementById('btn-repeat');
+    const seekSlider = document.getElementById('seek-slider');
+    const progressBar = document.getElementById('progress-bar');
+    const bufferedBar = document.getElementById('buffered-bar');
+    const currentTimeEl = document.getElementById('current-time');
+    const totalDurationEl = document.getElementById('total-duration');
+    const vinylDisc = document.getElementById('vinyl-disc');
+    const playingStatus = document.getElementById('playing-status');
+    const playlistEl = document.getElementById('playlist');
 
-        // Inline Service Worker Code for PWA offline shell support
+    // Register Service Worker for auto-caching offline
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
         const swCode = `
-            const CACHE_NAME = 'behoccong-music-v1';
-            self.addEventListener('install', (e) => {
-                self.skipWaiting();
-            });
-            self.addEventListener('activate', (e) => {
-                e.waitUntil(clients.claim());
-            });
-            self.addEventListener('fetch', (e) => {
-                // Pass-through fetch for media streams & network requests
-            });
-        `;
-        const swBlob = new Blob([swCode], { type: 'application/javascript' });
-        
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-                    .then(reg => console.log('PWA SW Registered successfully.'))
-                    .catch(err => console.log('SW registration error:', err));
-            });
-        }
-
-        /* ====================================================================
-           2. SONGS DATA & STATE MANAGEMENT
-           ==================================================================== */
-        const SONGS = [
-            { id: 1, title: "999 Đóa Hồng", artist: "Lâm Trí Hải - Long Nhật", cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80", src: "music/999DoaHong-LamTriHaiLongNhat-2450373.mp3" },
-            { id: 2, title: "Bước Chân Lẻ Loi", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=80", src: "music/BuocChanLeLoi-DanTruong_3tvaj.mp3" },
-            { id: 3, title: "Còn Lại Một Mình", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=80", src: "music/ConLaiMotMinh-DanTruong_3kavx.mp3" },
-            { id: 4, title: "Đi Về Nơi Xa", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80", src: "music/DiVeNoiXa-DanTruong_94v.mp3" },
-            { id: 5, title: "Kiếp Ve Sầu", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500&auto=format&fit=crop&q=80", src: "music/KiepVeSau-DanTruong-2445024.mp3" },
-            { id: 6, title: "Mưa Buồn", artist: "Cẩm Ly - Đan Trường", cover: "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500&auto=format&fit=crop&q=80", src: "music/MuaBuon-CamLy-DanTruong_42fdw.mp3" },
-            { id: 7, title: "Nếu Phôi Pha Ngày Mai", artist: "Đan Trường - Cẩm Ly", cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=80", src: "music/NeuPhoiPhaNgayMai-DanTruong-CamLy_3jm42.mp3" },
-            { id: 8, title: "Ta Chẳng Còn Ai", artist: "Phương Thanh", cover: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&auto=format&fit=crop&q=80", src: "music/TaChangConAi-PhuongThanh_935.mp3" },
-            { id: 9, title: "Ta Chẳng Còn Ai (Bản 2)", artist: "Phương Thanh", cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&auto=format&fit=crop&q=80", src: "music/TaChangConAi-PhuongThanh-2848277.mp3" },
-            { id: 10, title: "Thà Rằng Chia Tay", artist: "Cẩm Ly", cover: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=500&auto=format&fit=crop&q=80", src: "music/ThaRangChiaTay-CamLy_3qung.mp3" },
-            { id: 11, title: "Tình Quay Gót", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&auto=format&fit=crop&q=80", src: "music/TinhQuayGot-DanTruong_45q6j.mp3" },
-            { id: 12, title: "Tình Thôi Xót Xa", artist: "Lam Trường", cover: "https://images.unsplash.com/photo-1445375011782-4a2212578063?w=500&auto=format&fit=crop&q=80", src: "music/TinhThoiXotXa-LamTruong-2453487.mp3" },
-            { id: 13, title: "Trống Vắng", artist: "Phương Thanh", cover: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=80", src: "music/TrongVang-PhuongThanh-603201.mp3" }
-        ];
-
-        // DOM Elements
-        const audio = document.getElementById('audio-player');
-        const btnPlay = document.getElementById('btn-play');
-        const playIcon = document.getElementById('play-icon');
-        const btnPrev = document.getElementById('btn-prev');
-        const btnNext = document.getElementById('btn-next');
-        const btnShuffle = document.getElementById('btn-shuffle');
-        const btnLoop = document.getElementById('btn-loop');
-        const btnMute = document.getElementById('btn-mute');
-        const volumeIcon = document.getElementById('volume-icon');
-        const progressBar = document.getElementById('progress-bar');
-        const volumeBar = document.getElementById('volume-bar');
-        const currentTimeEl = document.getElementById('current-time');
-        const totalDurationEl = document.getElementById('total-duration');
-        const songTitleEl = document.getElementById('song-title');
-        const songArtistEl = document.getElementById('song-artist');
-        const songCoverEl = document.getElementById('song-cover');
-        const cdDisc = document.getElementById('cd-disc');
-        const playlistContainer = document.getElementById('playlist-container');
-        const playlistCountEl = document.getElementById('playlist-count');
-        const statusPill = document.getElementById('status-pill');
-        const searchInput = document.getElementById('search-input');
-
-        // PWA Elements
-        const btnInstallPWA = document.getElementById('btn-install-pwa');
-        const btnIosGuide = document.getElementById('btn-ios-guide');
-        const iosModal = document.getElementById('ios-modal');
-        const btnCloseIosModal = document.getElementById('btn-close-ios-modal');
-        const btnUnderstand = document.getElementById('btn-understand');
-        const appModeBadge = document.getElementById('app-mode-badge');
-
-        // State variables
-        let currentSongIndex = 0;
-        let isPlaying = false;
-        let isShuffle = false;
-        let isLoop = false;
-        let lastVolume = 0.85;
-        let deferredPrompt = null;
-
-        const STORAGE_KEY = 'behoccong_pwa_music_state';
-
-        /* ====================================================================
-           3. HELPER FUNCTIONS & RENDERERS
-           ==================================================================== */
-        function formatTime(seconds) {
-            if (isNaN(seconds) || seconds === null) return "00:00:00";
-            const hrs = Math.floor(seconds / 3600);
-            const mins = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
-            const pad = (num) => String(num).padStart(2, '0');
-            return hrs > 0 ? `${pad(hrs)}:${pad(mins)}:${pad(secs)}` : `00:${pad(mins)}:${pad(secs)}`;
-        }
-
-        function renderPlaylist(query = '') {
-            playlistContainer.innerHTML = '';
-            const filteredSongs = SONGS.filter(song => 
-                song.title.toLowerCase().includes(query.toLowerCase()) || 
-                song.artist.toLowerCase().includes(query.toLowerCase())
-            );
-
-            playlistCountEl.textContent = `${filteredSongs.length} bài`;
-
-            filteredSongs.forEach((song) => {
-                const realIndex = SONGS.findIndex(s => s.id === song.id);
-                const isActive = realIndex === currentSongIndex;
-
-                const card = document.createElement('div');
-                card.className = `glass-card p-2.5 rounded-2xl flex items-center justify-between cursor-pointer ${
-                    isActive ? 'border-purple-500/60 bg-purple-500/15' : ''
-                }`;
-
-                card.innerHTML = `
-                    <div class="flex items-center gap-3 overflow-hidden">
-                        <img src="${song.cover}" alt="Cover" class="w-10 h-10 rounded-xl object-cover flex-shrink-0">
-                        <div class="truncate">
-                            <h4 class="text-xs font-semibold ${isActive ? 'text-purple-300' : 'text-slate-200'} truncate">${song.title}</h4>
-                            <p class="text-[10px] text-slate-400 truncate">${song.artist}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        ${isActive && isPlaying ? `
-                            <div class="flex items-end gap-0.5 h-3 px-1">
-                                <span class="w-0.5 bg-purple-400 animate-[bounce_1s_infinite_100ms] h-full rounded-full"></span>
-                                <span class="w-0.5 bg-purple-400 animate-[bounce_1s_infinite_300ms] h-2/3 rounded-full"></span>
-                                <span class="w-0.5 bg-purple-400 animate-[bounce_1s_infinite_200ms] h-4/5 rounded-full"></span>
-                            </div>
-                        ` : ''}
-                        <button class="w-7 h-7 rounded-full flex items-center justify-center ${isActive ? 'text-purple-300' : 'text-slate-500 hover:text-slate-300'}">
-                            <i class="fa-solid ${isActive && isPlaying ? 'fa-pause' : 'fa-play'} text-[10px]"></i>
-                        </button>
-                    </div>
-                `;
-
-                card.addEventListener('click', () => {
-                    if (currentSongIndex === realIndex) {
-                        togglePlay();
-                    } else {
-                        loadSong(realIndex, true);
+          const CACHE_NAME = 'music-app-v2';
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+          self.addEventListener('fetch', e => {
+            if (e.request.url.endsWith('.mp3')) {
+              e.respondWith(
+                caches.match(e.request).then(cached => {
+                  if (cached) return cached;
+                  return fetch(e.request).then(response => {
+                    if (response.status === 200) {
+                      const clone = response.clone();
+                      caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
                     }
-                });
-
-                playlistContainer.appendChild(card);
-            });
-        }
-
-        function loadSong(index, shouldPlay = false, savedTime = 0) {
-            currentSongIndex = index;
-            const song = SONGS[currentSongIndex];
-
-            songTitleEl.textContent = song.title;
-            songArtistEl.textContent = song.artist;
-            songCoverEl.src = song.cover;
-            audio.src = song.src;
-
-            // MediaSession API for Native Lockscreen / App Background Controls
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: song.title,
-                    artist: song.artist,
-                    album: "BeHocCong-1-to-20",
-                    artwork: [{ src: song.cover, sizes: '512x512', type: 'image/jpeg' }]
-                });
-
-                navigator.mediaSession.setActionHandler('play', playSong);
-                navigator.mediaSession.setActionHandler('pause', pauseSong);
-                navigator.mediaSession.setActionHandler('previoustrack', prevSong);
-                navigator.mediaSession.setActionHandler('nexttrack', nextSong);
-            }
-
-            renderPlaylist(searchInput.value);
-
-            if (savedTime > 0) {
-                audio.currentTime = savedTime;
-            }
-
-            if (shouldPlay) {
-                playSong();
+                    return response;
+                  });
+                })
+              );
             } else {
-                pauseSong();
+              e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
             }
-        }
+          });
+        `;
+        const blob = new Blob([swCode], { type: 'text/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+      });
+    }
 
-        function playSong() {
-            isPlaying = true;
-            audio.play().then(() => {
-                playIcon.className = "fa-solid fa-pause text-2xl";
-                cdDisc.classList.remove('paused-vinyl');
-                statusPill.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Đang phát`;
-                statusPill.className = "inline-flex items-center gap-2 text-[11px] font-medium text-emerald-300 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 mb-3";
-                renderPlaylist(searchInput.value);
-            }).catch(err => {
-                console.log("Autoplay blocked or waiting user gesture:", err);
-            });
-        }
+    function formatTime(seconds) {
+      if (isNaN(seconds) || seconds < 0) return "00:00:00";
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = Math.floor(seconds % 60);
+      return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
 
-        function pauseSong() {
-            isPlaying = false;
-            audio.pause();
-            playIcon.className = "fa-solid fa-play text-2xl ml-1";
-            cdDisc.classList.add('paused-vinyl');
-            statusPill.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Tạm dừng`;
-            statusPill.className = "inline-flex items-center gap-2 text-[11px] font-medium text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mb-3";
-            renderPlaylist(searchInput.value);
-        }
+    function renderPlaylist() {
+      playlistEl.innerHTML = SONGS.map((song, idx) => `
+        <div onclick="selectSong(${idx})" class="flex items-center justify-between p-3 rounded-2xl cursor-pointer transition ${idx === currentIndex ? 'bg-violet-600/20 border border-violet-500/30' : 'hover:bg-white/5 border border-transparent'}">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-compact-disc ${idx === currentIndex && isPlaying ? 'text-violet-400 animate-spin' : 'text-gray-400'}"></i>
+            </div>
+            <div class="truncate">
+              <h4 class="font-semibold text-sm truncate ${idx === currentIndex ? 'text-violet-300' : 'text-white'}">${song.title}</h4>
+              <p class="text-xs text-gray-400 truncate">${song.artist}</p>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-full flex items-center justify-center ${idx === currentIndex ? 'text-violet-400' : 'text-gray-500'}">
+            <i class="fa-solid ${idx === currentIndex && isPlaying ? 'fa-volume-high' : 'fa-play'} text-xs"></i>
+          </div>
+        </div>
+      `).join('');
+    }
 
-        function togglePlay() {
-            if (isPlaying) {
-                pauseSong();
-            } else {
-                playSong();
-            }
-        }
+    function loadSong(song) {
+      songTitle.textContent = song.title;
+      songArtist.textContent = song.artist;
+      audio.src = song.src;
+      renderPlaylist();
+      
+      // Reset progress & buffer
+      progressBar.style.width = '0%';
+      bufferedBar.style.width = '0%';
+      seekSlider.value = 0;
+      currentTimeEl.textContent = "00:00:00";
+    }
 
-        function nextSong() {
-            if (isShuffle) {
-                let randomIndex;
-                do {
-                    randomIndex = Math.floor(Math.random() * SONGS.length);
-                } while (randomIndex === currentSongIndex && SONGS.length > 1);
-                currentSongIndex = randomIndex;
-            } else {
-                currentSongIndex = (currentSongIndex + 1) % SONGS.length;
-            }
-            loadSong(currentSongIndex, true);
-        }
+    function playSong() {
+      isPlaying = true;
+      audio.play().then(() => {
+        vinylDisc.classList.remove('disc-paused');
+        playingStatus.textContent = 'Đang phát';
+        playingStatus.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 border border-emerald-500/30 text-emerald-300';
+        renderPlaylist();
+      }).catch(err => {
+        console.log('Playback error:', err);
+      });
+    }
 
-        function prevSong() {
-            if (audio.currentTime > 5) {
-                audio.currentTime = 0;
-                return;
-            }
-            currentSongIndex = (currentSongIndex - 1 + SONGS.length) % SONGS.length;
-            loadSong(currentSongIndex, true);
-        }
+    function pauseSong() {
+      isPlaying = false;
+      audio.pause();
+      vinylDisc.classList.add('disc-paused');
+      playingStatus.textContent = 'Đã tạm dừng';
+      playingStatus.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-white/5 border border-white/10 text-gray-300';
+      renderPlaylist();
+    }
 
-        function saveState() {
-            const state = {
-                songIndex: currentSongIndex,
-                currentTime: audio.currentTime || 0,
-                volume: audio.volume,
-                isShuffle: isShuffle,
-                isLoop: isLoop
-            };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        }
+    function selectSong(index) {
+      currentIndex = index;
+      loadSong(SONGS[currentIndex]);
+      playSong();
+    }
 
-        function restoreState() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (!saved) {
-                loadSong(0, false);
-                return;
-            }
+    function prevSong() {
+      currentIndex = (currentIndex - 1 + SONGS.length) % SONGS.length;
+      loadSong(SONGS[currentIndex]);
+      playSong();
+    }
 
-            try {
-                const state = JSON.parse(saved);
-                currentSongIndex = state.songIndex < SONGS.length ? state.songIndex : 0;
-                
-                if (state.isShuffle) {
-                    isShuffle = true;
-                    btnShuffle.classList.add('text-purple-400');
-                }
-                
-                if (state.isLoop) {
-                    isLoop = true;
-                    btnLoop.classList.add('text-purple-400');
-                }
+    function nextSong() {
+      if (isShuffle) {
+        currentIndex = Math.floor(Math.random() * SONGS.length);
+      } else {
+        currentIndex = (currentIndex + 1) % SONGS.length;
+      }
+      loadSong(SONGS[currentIndex]);
+      playSong();
+    }
 
-                if (state.volume !== undefined) {
-                    audio.volume = state.volume;
-                    volumeBar.value = state.volume;
-                    updateVolumeIcon(state.volume);
-                }
+    // Event Listeners
+    btnPlay.addEventListener('click', playSong);
+    btnPause.addEventListener('click', pauseSong);
+    btnPrev.addEventListener('click', prevSong);
+    btnNext.addEventListener('click', nextSong);
 
-                loadSong(currentSongIndex, false, state.currentTime || 0);
-            } catch (e) {
-                loadSong(0, false);
-            }
-        }
+    btnShuffle.addEventListener('click', () => {
+      isShuffle = !isShuffle;
+      btnShuffle.classList.toggle('text-violet-400', isShuffle);
+      btnShuffle.classList.toggle('text-gray-400', !isShuffle);
+    });
 
-        /* ====================================================================
-           4. EVENT LISTENERS & AUDIO EVENTS
-           ==================================================================== */
-        audio.addEventListener('timeupdate', () => {
-            if (!isNaN(audio.duration) && audio.duration > 0) {
-                const progressPercent = (audio.currentTime / audio.duration) * 100;
-                progressBar.value = progressPercent;
-                
-                progressBar.style.background = `linear-gradient(to right, #a78bfa 0%, #a78bfa ${progressPercent}%, rgba(255,255,255,0.1) ${progressPercent}%, rgba(255,255,255,0.1) 100%)`;
+    btnRepeat.addEventListener('click', () => {
+      isRepeat = !isRepeat;
+      btnRepeat.classList.toggle('text-violet-400', isRepeat);
+      btnRepeat.classList.toggle('text-gray-400', !isRepeat);
+    });
 
-                currentTimeEl.textContent = formatTime(audio.currentTime);
-                totalDurationEl.textContent = formatTime(audio.duration);
+    // Update Progress & YouTube-like Buffer Bar
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        seekSlider.value = pct;
+        progressBar.style.width = `${pct}%`;
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+      }
+    });
 
-                if (Math.floor(audio.currentTime) % 3 === 0) {
-                    saveState();
-                }
-            }
-        });
+    audio.addEventListener('progress', () => {
+      if (audio.duration && audio.buffered.length > 0) {
+        const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+        const bufPct = (bufferedEnd / audio.duration) * 100;
+        bufferedBar.style.width = `${bufPct}%`;
+      }
+    });
 
-        audio.addEventListener('loadedmetadata', () => {
-            totalDurationEl.textContent = formatTime(audio.duration);
-        });
+    audio.addEventListener('loadedmetadata', () => {
+      totalDurationEl.textContent = formatTime(audio.duration);
+    });
 
-        audio.addEventListener('ended', () => {
-            if (isLoop) {
-                audio.currentTime = 0;
-                playSong();
-            } else {
-                nextSong();
-            }
-        });
+    audio.addEventListener('ended', () => {
+      if (isRepeat) {
+        playSong();
+      } else {
+        nextSong();
+      }
+    });
 
-        progressBar.addEventListener('input', (e) => {
-            if (!isNaN(audio.duration)) {
-                const seekTime = (e.target.value / 100) * audio.duration;
-                audio.currentTime = seekTime;
-                currentTimeEl.textContent = formatTime(seekTime);
-                saveState();
-            }
-        });
+    seekSlider.addEventListener('input', () => {
+      if (audio.duration) {
+        const seekTime = (seekSlider.value / 100) * audio.duration;
+        audio.currentTime = seekTime;
+        progressBar.style.width = `${seekSlider.value}%`;
+      }
+    });
 
-        volumeBar.addEventListener('input', (e) => {
-            const val = parseFloat(e.target.value);
-            audio.volume = val;
-            updateVolumeIcon(val);
-            saveState();
-        });
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        isPlaying ? pauseSong() : playSong();
+      } else if (e.code === 'ArrowRight') {
+        audio.currentTime = Math.min(audio.currentTime + 5, audio.duration || 0);
+      } else if (e.code === 'ArrowLeft') {
+        audio.currentTime = Math.max(audio.currentTime - 5, 0);
+      }
+    });
 
-        function updateVolumeIcon(val) {
-            if (val === 0) {
-                volumeIcon.className = "fa-solid fa-volume-xmark text-red-400";
-            } else if (val < 0.5) {
-                volumeIcon.className = "fa-solid fa-volume-low text-slate-300";
-            } else {
-                volumeIcon.className = "fa-solid fa-volume-high text-slate-300";
-            }
-        }
-
-        btnMute.addEventListener('click', () => {
-            if (audio.volume > 0) {
-                lastVolume = audio.volume;
-                audio.volume = 0;
-                volumeBar.value = 0;
-                updateVolumeIcon(0);
-            } else {
-                audio.volume = lastVolume || 0.85;
-                volumeBar.value = audio.volume;
-                updateVolumeIcon(audio.volume);
-            }
-            saveState();
-        });
-
-        btnShuffle.addEventListener('click', () => {
-            isShuffle = !isShuffle;
-            btnShuffle.classList.toggle('text-purple-400', isShuffle);
-            btnShuffle.classList.toggle('text-slate-400', !isShuffle);
-            saveState();
-        });
-
-        btnLoop.addEventListener('click', () => {
-            isLoop = !isLoop;
-            btnLoop.classList.toggle('text-purple-400', isLoop);
-            btnLoop.classList.toggle('text-slate-400', !isLoop);
-            saveState();
-        });
-
-        btnPlay.addEventListener('click', togglePlay);
-        btnNext.addEventListener('click', nextSong);
-        btnPrev.addEventListener('click', prevSong);
-
-        searchInput.addEventListener('input', (e) => {
-            renderPlaylist(e.target.value);
-        });
-
-        // Keyboard Navigation Shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT') return;
-            switch (e.code) {
-                case 'Space':
-                    e.preventDefault();
-                    togglePlay();
-                    break;
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    audio.currentTime = Math.max(0, audio.currentTime - 5);
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 5);
-                    break;
-                case 'KeyM':
-                    e.preventDefault();
-                    btnMute.click();
-                    break;
-            }
-        });
-
-        /* ====================================================================
-           5. PWA STANDALONE & INSTALLATION HANDLERS
-           ==================================================================== */
-        
-        // Detect if app is running in Standalone App Mode (Installed PWA)
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                             window.navigator.standalone === true;
-
-        if (isStandalone) {
-            appModeBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Standalone App Active`;
-            btnInstallPWA.classList.add('hidden');
-            btnIosGuide.classList.add('hidden');
-        }
-
-        // Chrome/Android PWA Install Prompt listener
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            btnInstallPWA.classList.remove('hidden');
-        });
-
-        btnInstallPWA.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    btnInstallPWA.classList.add('hidden');
-                }
-                deferredPrompt = null;
-            }
-        });
-
-        // iOS Modal Open / Close
-        btnIosGuide.addEventListener('click', () => {
-            iosModal.classList.remove('hidden');
-        });
-
-        btnCloseIosModal.addEventListener('click', () => {
-            iosModal.classList.add('hidden');
-        });
-
-        btnUnderstand.addEventListener('click', () => {
-            iosModal.classList.add('hidden');
-        });
-
-        // Window Initializer
-        window.onload = function() {
-            restoreState();
-        };
-    </script>
+    // Initialize App
+    loadSong(SONGS[currentIndex]);
+  </script>
 </body>
 </html>
