@@ -1,76 +1,131 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Personal Music Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Nhạc Vàng Lofi App</title>
+    
+    <!-- PWA Primary Meta Tags -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Trình phát nhạc cá nhân BeHocCong-1-to-20 - Chạy độc lập như App trên Điện thoại & Máy tính">
+    
+    <!-- iOS / Safari Standalone Mobile App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nhạc Lofi">
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=180&h=180&fit=crop">
+
+    <!-- Android / Chrome Standalone Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Dynamic Inline Web App Manifest Data URI for Full Standalone PWA Support -->
+    <link rel="manifest" id="pwa-manifest">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-            min-height: 100vh;
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* Glassmorphism Styles */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #090d16;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.15) 0px, transparent 50%);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+
+        html {
+            height: -webkit-fill-available;
+        }
+
+        /* Glassmorphism Panels */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glass-card:hover {
+        .glass-card:active, .glass-card:hover {
             background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(139, 92, 246, 0.3);
-            transform: translateY(-2px);
+            border-color: rgba(167, 139, 250, 0.3);
         }
 
-        /* CD Rotation Animation */
-        @keyframes spin {
+        /* Vinyl Spin Animation */
+        @keyframes vinyl-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
-        .rotate-cd {
-            animation: spin 20s linear infinite;
+        .rotate-vinyl {
+            animation: vinyl-spin 22s linear infinite;
         }
 
-        .paused-cd {
+        .paused-vinyl {
             animation-play-state: paused;
+        }
+
+        /* Safe area padding for notch & home bar in Standalone Mobile Mode */
+        .safe-top {
+            padding-top: env(safe-area-inset-top, 16px);
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
         }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
+            background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.4);
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.7);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 99px;
         }
 
-        /* Custom Range Input */
+        /* Custom Sliders */
         input[type=range] {
             -webkit-appearance: none;
             background: transparent;
@@ -84,84 +139,123 @@
             border-radius: 9999px;
         }
         input[type=range]::-webkit-slider-thumb {
-            height: 16px;
-            width: 16px;
+            height: 18px;
+            width: 18px;
             border-radius: 50%;
-            background: #a855f7;
+            background: #a78bfa;
             cursor: pointer;
             -webkit-appearance: none;
-            margin-top: -5px;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
-            transition: transform 0.1s ease;
+            margin-top: -6px;
+            box-shadow: 0 0 12px rgba(167, 139, 250, 0.8);
+            transition: transform 0.15s ease;
         }
         input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
+            transform: scale(1.25);
         }
     </style>
 </head>
-<body class="text-slate-100 flex items-center justify-center p-4 md:p-8 relative overflow-x-hidden">
+<body class="text-slate-100 flex flex-col items-center justify-between min-h-screen safe-top safe-bottom p-3 sm:p-6 select-none">
 
-    <!-- Ambient Glowing Background Elements -->
-    <div class="fixed top-1/4 -left-20 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="fixed bottom-1/4 -right-20 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-6 z-10">
-
-        <!-- Header / Mobile Branding -->
-        <div class="lg:col-span-12 flex items-center justify-between px-2 mb-2">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                    <i class="fa-solid fa-compact-disc text-xl text-white"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-200">Nhạc Vàng Lofi & Remix</h1>
-                    <p class="text-xs text-slate-400">Trình nghe nhạc cá nhân - BeHocCong-1-to-20</p>
-                </div>
+    <!-- Top App Navigation / Status Bar -->
+    <header class="w-full max-w-5xl flex items-center justify-between py-2 px-3 mb-2 glass-panel rounded-2xl">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                <i class="fa-solid fa-compact-disc text-xl text-white"></i>
             </div>
-            
-            <div class="text-xs bg-purple-900/30 text-purple-300 border border-purple-500/30 px-3 py-1.5 rounded-full hidden sm:block">
-                <i class="fa-solid fa-keyboard mr-1"></i> Phím tắt: Space (Play) | ◄ ► (Tua 5s) | M (Mute)
+            <div>
+                <h1 class="text-base font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-200">BeHocCong Music</h1>
+                <p id="app-mode-badge" class="text-[10px] text-slate-400 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Native Web App Mode
+                </p>
             </div>
         </div>
 
-        <!-- Left Column: Main Player UI -->
-        <div class="lg:col-span-7 glass-panel rounded-3xl p-6 sm:p-8 flex flex-col justify-between items-center text-center relative overflow-hidden">
-            
-            <!-- Song Title & Artist -->
-            <div class="w-full mb-6">
-                <div id="playing-indicator" class="inline-flex items-center gap-2 text-xs font-medium text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 mb-3">
-                    <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
-                    Đang sẵn sàng
+        <div class="flex items-center gap-2">
+            <!-- Install App Button (Visible on Browsers supporting install prompt or iOS guide) -->
+            <button id="btn-install-pwa" class="hidden text-xs bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold px-3 py-2 rounded-xl shadow-lg shadow-purple-600/30 flex items-center gap-2 transition transform active:scale-95">
+                <i class="fa-solid fa-download"></i>
+                <span>Cài Đặt App</span>
+            </button>
+            <button id="btn-ios-guide" class="text-xs bg-white/10 hover:bg-white/20 text-slate-200 px-3 py-2 rounded-xl border border-white/10 flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-mobile-screen"></i>
+                <span class="hidden sm:inline">Thêm ra Màn hình chính</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- PWA Install Modal / iOS Guide Banner -->
+    <div id="ios-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 rounded-3xl max-w-md w-full border border-purple-500/30 text-center relative">
+            <button id="btn-close-ios-modal" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-16 h-16 bg-purple-600/20 rounded-2xl border border-purple-500/40 flex items-center justify-center mx-auto mb-4 text-purple-400 text-2xl">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Cài Đặt Web App Độc Lập</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                Để ứng dụng ẩn hoàn toàn khung đường link, thanh công cụ trình duyệt và chạy full màn hình giống App thật:
+            </p>
+            <div class="text-left bg-slate-900/60 p-4 rounded-2xl text-xs space-y-3 mb-5 border border-white/5 text-slate-300">
+                <div class="flex items-start gap-3">
+                    <span class="bg-purple-600 text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">1</span>
+                    <span>Trên <b>iOS Safari</b>: Nhấn nút <b>Chia sẻ (Share)</b> <i class="fa-solid fa-share-from-square text-purple-400"></i> ở chân màn hình.</span>
                 </div>
-                <h2 id="current-title" class="text-2xl sm:text-3xl font-bold text-white tracking-wide truncate px-4">Tên bài hát</h2>
-                <p id="current-artist" class="text-slate-400 text-sm mt-1">Nghệ sĩ / Thể loại</p>
+                <div class="flex items-start gap-3">
+                    <span class="bg-purple-600 text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">2</span>
+                    <span>Chọn <b>"Thêm vào Màn hình chính" (Add to Home Screen)</b> <i class="fa-solid fa-plus-square text-purple-400"></i>.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="bg-purple-600 text-white w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold">3</span>
+                    <span>Mở App trực tiếp từ icon ở màn hình chính để dùng Full Screen không lộ link.</span>
+                </div>
+            </div>
+            <button id="btn-understand" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-xs shadow-lg shadow-purple-600/30">
+                Đã Rõ
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-4 my-auto flex-1">
+
+        <!-- Player Section -->
+        <section class="lg:col-span-7 glass-panel rounded-3xl p-5 sm:p-7 flex flex-col justify-between items-center text-center relative overflow-hidden">
+            
+            <!-- Dynamic Background Glow -->
+            <div class="absolute -top-24 -left-24 w-60 h-60 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Song Info -->
+            <div class="w-full z-10">
+                <div id="status-pill" class="inline-flex items-center gap-2 text-[11px] font-medium text-purple-300 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 mb-3">
+                    <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                    Sẵn sàng phát nhạc
+                </div>
+                <h2 id="song-title" class="text-xl sm:text-2xl font-bold text-white tracking-wide truncate px-2">Đang tải bài hát...</h2>
+                <p id="song-artist" class="text-slate-400 text-xs sm:text-sm mt-1">BeHocCong Collection</p>
             </div>
 
-            <!-- Rotating Vinyl CD Visualizer -->
-            <div class="relative my-4 group">
-                <!-- CD Outer Glow -->
-                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 blur-xl opacity-30 group-hover:opacity-50 transition duration-500"></div>
+            <!-- Vinyl Disc Visualizer -->
+            <div class="relative my-6 group z-10">
+                <div class="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 blur-xl opacity-30 group-hover:opacity-50 transition duration-500"></div>
                 
-                <!-- Vinyl Disc -->
-                <div id="cd-disc" class="w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-slate-950 border-4 border-slate-800 shadow-2xl relative flex items-center justify-center rotate-cd paused-cd transition-all">
-                    <!-- CD Groove Rings -->
-                    <div class="absolute inset-3 rounded-full border border-slate-800/80"></div>
-                    <div class="absolute inset-8 rounded-full border border-slate-800/60"></div>
-                    <div class="absolute inset-14 rounded-full border border-slate-800/40"></div>
+                <div id="cd-disc" class="w-48 h-48 sm:w-60 sm:h-60 rounded-full bg-slate-950 border-4 border-slate-800 shadow-2xl relative flex items-center justify-center rotate-vinyl paused-vinyl transition-transform">
+                    <div class="absolute inset-2 rounded-full border border-slate-800/80"></div>
+                    <div class="absolute inset-6 rounded-full border border-slate-800/60"></div>
+                    <div class="absolute inset-12 rounded-full border border-slate-800/40"></div>
                     
-                    <!-- CD Cover Image -->
-                    <img id="current-cover" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&auto=format&fit=crop&q=80" alt="Cover" class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-900 shadow-inner">
+                    <img id="song-cover" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&auto=format&fit=crop&q=80" alt="Cover" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-900 shadow-inner">
                     
-                    <!-- Center Hole -->
                     <div class="absolute w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-950 border-2 border-slate-700 flex items-center justify-center">
                         <div class="w-2 h-2 rounded-full bg-slate-900"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Progress Bar Section -->
-            <div class="w-full mt-6">
-                <div class="flex justify-between text-xs text-slate-400 font-mono mb-1">
+            <!-- Progress Bar -->
+            <div class="w-full z-10 px-1">
+                <div class="flex justify-between text-xs text-slate-400 font-mono mb-1.5">
                     <span id="current-time">00:00:00</span>
                     <span id="total-duration">00:00:00</span>
                 </div>
@@ -170,106 +264,153 @@
                     <input type="range" id="progress-bar" value="0" min="0" max="100" class="w-full">
                 </div>
                 
-                <div class="text-[10px] text-slate-500 text-right mt-1">
-                    <i class="fa-solid fa-floppy-disk text-purple-400"></i> Tự động lưu vị trí phát
+                <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+                    <span class="flex items-center gap-1 text-purple-400">
+                        <i class="fa-solid fa-hard-drive"></i> PWA Local State
+                    </span>
+                    <span class="text-slate-500">Auto Save Seek Position</span>
                 </div>
             </div>
 
-            <!-- Player Controls -->
-            <div class="w-full mt-6 flex flex-col gap-4">
-                <div class="flex items-center justify-center gap-4 sm:gap-6">
-                    <!-- Shuffle Button -->
-                    <button id="btn-shuffle" title="Bật/Tắt Trộn Bài" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition hover:bg-white/5">
-                        <i class="fa-solid fa-shuffle text-lg"></i>
+            <!-- Controls -->
+            <div class="w-full mt-5 flex flex-col gap-3 z-10">
+                <div class="flex items-center justify-center gap-3 sm:gap-6">
+                    <button id="btn-shuffle" title="Trộn bài" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition hover:bg-white/5">
+                        <i class="fa-solid fa-shuffle text-base"></i>
                     </button>
 
-                    <!-- Previous Button -->
-                    <button id="btn-prev" title="Bài Trước" class="w-12 h-12 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 transition">
+                    <button id="btn-prev" title="Bài trước" class="w-12 h-12 rounded-full flex items-center justify-center text-slate-200 hover:text-white hover:bg-white/10 transition active:scale-90">
                         <i class="fa-solid fa-backward-step text-xl"></i>
                     </button>
 
-                    <!-- Play / Pause Main Button -->
-                    <button id="btn-play" title="Phát / Tạm Dừng" class="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400 text-white flex items-center justify-center shadow-lg shadow-purple-600/40 transform hover:scale-105 active:scale-95 transition">
+                    <button id="btn-play" title="Phát / Tạm dừng" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400 text-white flex items-center justify-center shadow-lg shadow-purple-600/40 transform active:scale-95 transition">
                         <i id="play-icon" class="fa-solid fa-play text-2xl ml-1"></i>
                     </button>
 
-                    <!-- Next Button -->
-                    <button id="btn-next" title="Bài Tiếp Theo" class="w-12 h-12 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 transition">
+                    <button id="btn-next" title="Bài kế tiếp" class="w-12 h-12 rounded-full flex items-center justify-center text-slate-200 hover:text-white hover:bg-white/10 transition active:scale-90">
                         <i class="fa-solid fa-forward-step text-xl"></i>
                     </button>
 
-                    <!-- Loop Button -->
-                    <button id="btn-loop" title="Bật/Tắt Lặp Bài" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition hover:bg-white/5">
-                        <i class="fa-solid fa-repeat text-lg"></i>
+                    <button id="btn-loop" title="Lặp bài" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition hover:bg-white/5">
+                        <i class="fa-solid fa-repeat text-base"></i>
                     </button>
                 </div>
 
-                <!-- Volume Bar -->
-                <div class="flex items-center justify-center gap-3 w-3/4 sm:w-1/2 mx-auto pt-2">
+                <!-- Volume Control -->
+                <div class="flex items-center justify-center gap-3 w-3/4 sm:w-1/2 mx-auto pt-1">
                     <button id="btn-mute" class="text-slate-400 hover:text-white transition">
-                        <i id="volume-icon" class="fa-solid fa-volume-high"></i>
+                        <i id="volume-icon" class="fa-solid fa-volume-high text-xs"></i>
                     </button>
-                    <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="0.8" class="w-full">
+                    <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="0.85" class="w-full">
                 </div>
             </div>
 
-        </div>
+        </section>
 
-        <!-- Right Column: Playlist & GitHub Guide -->
-        <div class="lg:col-span-5 flex flex-col gap-6">
-            
-            <!-- Playlist Container -->
-            <div class="glass-panel rounded-3xl p-6 flex-1 flex flex-col max-h-[500px]">
-                <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-                    <h3 class="font-semibold text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-list-ul text-purple-400"></i> Danh Sách Nhạc (BeHocCong-1-to-20)
-                    </h3>
-                    <span id="playlist-count" class="text-xs bg-white/10 px-2.5 py-1 rounded-full text-slate-300">0 bài</span>
+        <!-- Playlist Sidebar Section -->
+        <section class="lg:col-span-5 glass-panel rounded-3xl p-5 flex flex-col h-[400px] lg:h-auto overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-list-music text-purple-400"></i>
+                    <h3 class="font-bold text-sm text-white">Danh Sách Phát</h3>
                 </div>
-
-                <!-- Scrollable Song List -->
-                <div id="playlist-items" class="flex-1 overflow-y-auto space-y-2 pr-1">
-                    <!-- Dynamic playlist items will be rendered here by JavaScript -->
-                </div>
+                <span id="playlist-count" class="text-[11px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-0.5 rounded-full font-mono">13 bài</span>
             </div>
 
-            <!-- GitHub Pages Integration Instructions Guide -->
-            <div class="glass-panel rounded-3xl p-5 border-l-4 border-l-purple-500 text-xs text-slate-300">
-                <h4 class="font-bold text-sm text-purple-300 mb-2 flex items-center gap-2">
-                    <i class="fa-brands fa-github text-base"></i> Cấu trúc File trên Repo GitHub
-                </h4>
-                <p class="text-slate-400 leading-relaxed">
-                    Đảm bảo các file nhạc <code class="bg-black/40 text-purple-300 px-1 rounded">.mp3</code> được đặt cùng cấp thư mục với file <code class="bg-black/40 text-purple-300 px-1 rounded">index.html</code> hoặc đặt trong thư mục <code class="bg-black/40 text-purple-300 px-1 rounded">music/</code> tùy theo đường dẫn đã khai báo trong mảng <code class="bg-black/40 text-amber-300 px-1 rounded">SONGS</code>.
-                </p>
+            <!-- Search input in playlist -->
+            <div class="relative mb-3">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+                <input type="text" id="search-input" placeholder="Tìm kiếm bài hát..." class="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500/50">
             </div>
 
-        </div>
+            <!-- Song List Container -->
+            <div id="playlist-container" class="flex-1 overflow-y-auto space-y-2 pr-1">
+                <!-- Dynamic Songs Rendered Here -->
+            </div>
+        </section>
 
-    </div>
+    </main>
+
+    <!-- Footer Standalone App Tag -->
+    <footer class="w-full max-w-5xl text-center py-2 text-[11px] text-slate-500">
+        BeHocCong-1-to-20 PWA • Standalone Web App Mode
+    </footer>
 
     <!-- Audio Element -->
     <audio id="audio-player" preload="metadata"></audio>
 
     <script>
-        /**
-         * DANH SÁCH BÀI HÁT TỪ DỰ ÁN BEHOCCONG-1-TO-20
-         */
+        /* ====================================================================
+           1. PWA MANIFEST & SERVICE WORKER REGISTRATION (DYNAMIC INLINE)
+           ==================================================================== */
+        
+        // Generate Dynamic Web App Manifest Data URI for Full Standalone Capabilities
+        const manifestData = {
+            name: "Nhạc Vàng Lofi - BeHocCong",
+            short_name: "Nhạc Lofi",
+            description: "Trình phát nhạc cá nhân chạy độc lập như Native App",
+            start_url: "./",
+            display: "standalone",
+            orientation: "portrait",
+            background_color: "#090d16",
+            theme_color: "#0f172a",
+            icons: [
+                {
+                    src: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=192&h=192&fit=crop",
+                    sizes: "192x192",
+                    type: "image/png"
+                },
+                {
+                    src: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=512&h=512&fit=crop",
+                    sizes: "512x512",
+                    type: "image/png"
+                }
+            ]
+        };
+        
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+        document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
+
+        // Inline Service Worker Code for PWA offline shell support
+        const swCode = `
+            const CACHE_NAME = 'behoccong-music-v1';
+            self.addEventListener('install', (e) => {
+                self.skipWaiting();
+            });
+            self.addEventListener('activate', (e) => {
+                e.waitUntil(clients.claim());
+            });
+            self.addEventListener('fetch', (e) => {
+                // Pass-through fetch for media streams & network requests
+            });
+        `;
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob))
+                    .then(reg => console.log('PWA SW Registered successfully.'))
+                    .catch(err => console.log('SW registration error:', err));
+            });
+        }
+
+        /* ====================================================================
+           2. SONGS DATA & STATE MANAGEMENT
+           ==================================================================== */
         const SONGS = [
-            {
-                id: 1,
-                title: "999 Đóa Hồng",
-                artist: "Lâm Trí Hải - Long Nhật",
-                cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80",
-                src: "999DoaHong-LamTriHaiLongNhat-2450373.mp3"
-            },
-            {
-                id: 2,
-                title: "Bước Chân Lẻ Loi",
-                artist: "Đan Trường",
-                cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=80",
-                src: "BuocChanLeLoi-DanTruong_3tvaj.mp3"
-            },
-           
+            { id: 1, title: "999 Đóa Hồng", artist: "Lâm Trí Hải - Long Nhật", cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80", src: "999DoaHong-LamTriHaiLongNhat-2450373.mp3" },
+            { id: 2, title: "Bước Chân Lẻ Loi", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=80", src: "BuocChanLeLoi-DanTruong_3tvaj.mp3" },
+            { id: 3, title: "Còn Lại Một Mình", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=80", src: "ConLaiMotMinh-DanTruong_3kavx.mp3" },
+            { id: 4, title: "Đi Về Nơi Xa", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80", src: "DiVeNoiXa-DanTruong_94v.mp3" },
+            { id: 5, title: "Kiếp Ve Sầu", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500&auto=format&fit=crop&q=80", src: "KiepVeSau-DanTruong-2445024.mp3" },
+            { id: 6, title: "Mưa Buồn", artist: "Cẩm Ly - Đan Trường", cover: "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500&auto=format&fit=crop&q=80", src: "MuaBuon-CamLy-DanTruong_42fdw.mp3" },
+            { id: 7, title: "Nếu Phôi Pha Ngày Mai", artist: "Đan Trường - Cẩm Ly", cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=80", src: "NeuPhoiPhaNgayMai-DanTruong-CamLy_3jm42.mp3" },
+            { id: 8, title: "Ta Chẳng Còn Ai", artist: "Phương Thanh", cover: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&auto=format&fit=crop&q=80", src: "TaChangConAi-PhuongThanh_953.mp3" },
+            { id: 9, title: "Ta Chẳng Còn Ai (Bản 2)", artist: "Phương Thanh", cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&auto=format&fit=crop&q=80", src: "TaChangConAi-PhuongThanh-2848277.mp3" },
+            { id: 10, title: "Thà Rằng Chia Tay", artist: "Cẩm Ly", cover: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=500&auto=format&fit=crop&q=80", src: "ThaRangChiaTay-CamLy_3qung.mp3" },
+            { id: 11, title: "Tình Quay Gót", artist: "Đan Trường", cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&auto=format&fit=crop&q=80", src: "TinhQuayGot-DanTruong_45q6j.mp3" },
+            { id: 12, title: "Tình Thôi Xót Xa", artist: "Lam Trường", cover: "https://images.unsplash.com/photo-1445375011782-4a2212578063?w=500&auto=format&fit=crop&q=80", src: "TinhThoiXotXa-LamTruong-2453487.mp3" },
+            { id: 13, title: "Trống Vắng", artist: "Phương Thanh", cover: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=80", src: "TrongVang-PhuongThanh-603201.mp3" }
         ];
 
         // DOM Elements
@@ -286,106 +427,123 @@
         const volumeBar = document.getElementById('volume-bar');
         const currentTimeEl = document.getElementById('current-time');
         const totalDurationEl = document.getElementById('total-duration');
-        const currentTitleEl = document.getElementById('current-title');
-        const currentArtistEl = document.getElementById('current-artist');
-        const currentCoverEl = document.getElementById('current-cover');
+        const songTitleEl = document.getElementById('song-title');
+        const songArtistEl = document.getElementById('song-artist');
+        const songCoverEl = document.getElementById('song-cover');
         const cdDisc = document.getElementById('cd-disc');
-        const playlistItemsEl = document.getElementById('playlist-items');
+        const playlistContainer = document.getElementById('playlist-container');
         const playlistCountEl = document.getElementById('playlist-count');
-        const playingIndicator = document.getElementById('playing-indicator');
+        const statusPill = document.getElementById('status-pill');
+        const searchInput = document.getElementById('search-input');
 
-        // State Variables
+        // PWA Elements
+        const btnInstallPWA = document.getElementById('btn-install-pwa');
+        const btnIosGuide = document.getElementById('btn-ios-guide');
+        const iosModal = document.getElementById('ios-modal');
+        const btnCloseIosModal = document.getElementById('btn-close-ios-modal');
+        const btnUnderstand = document.getElementById('btn-understand');
+        const appModeBadge = document.getElementById('app-mode-badge');
+
+        // State variables
         let currentSongIndex = 0;
         let isPlaying = false;
         let isShuffle = false;
         let isLoop = false;
-        let lastVolume = 0.8;
+        let lastVolume = 0.85;
+        let deferredPrompt = null;
 
-        // LocalStorage Key Name
-        const STORAGE_KEY = 'my_music_player_behoccong_state';
+        const STORAGE_KEY = 'behoccong_pwa_music_state';
 
-        /**
-         * Format seconds into HH:MM:SS or MM:SS format
-         */
+        /* ====================================================================
+           3. HELPER FUNCTIONS & RENDERERS
+           ==================================================================== */
         function formatTime(seconds) {
             if (isNaN(seconds) || seconds === null) return "00:00:00";
-            
             const hrs = Math.floor(seconds / 3600);
             const mins = Math.floor((seconds % 3600) / 60);
             const secs = Math.floor(seconds % 60);
-
             const pad = (num) => String(num).padStart(2, '0');
-
-            if (hrs > 0) {
-                return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-            } else {
-                return `00:${pad(mins)}:${pad(secs)}`;
-            }
+            return hrs > 0 ? `${pad(hrs)}:${pad(mins)}:${pad(secs)}` : `00:${pad(mins)}:${pad(secs)}`;
         }
 
-        /**
-         * Render Playlist UI
-         */
-        function renderPlaylist() {
-            playlistItemsEl.innerHTML = '';
-            playlistCountEl.textContent = `${SONGS.length} bài`;
+        function renderPlaylist(query = '') {
+            playlistContainer.innerHTML = '';
+            const filteredSongs = SONGS.filter(song => 
+                song.title.toLowerCase().includes(query.toLowerCase()) || 
+                song.artist.toLowerCase().includes(query.toLowerCase())
+            );
 
-            SONGS.forEach((song, index) => {
-                const isActive = index === currentSongIndex;
-                const item = document.createElement('div');
-                item.className = `glass-card p-3 rounded-2xl flex items-center justify-between cursor-pointer ${
-                    isActive ? 'border-purple-500/60 bg-purple-500/10' : ''
+            playlistCountEl.textContent = `${filteredSongs.length} bài`;
+
+            filteredSongs.forEach((song) => {
+                const realIndex = SONGS.findIndex(s => s.id === song.id);
+                const isActive = realIndex === currentSongIndex;
+
+                const card = document.createElement('div');
+                card.className = `glass-card p-2.5 rounded-2xl flex items-center justify-between cursor-pointer ${
+                    isActive ? 'border-purple-500/60 bg-purple-500/15' : ''
                 }`;
-                
-                item.innerHTML = `
+
+                card.innerHTML = `
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <img src="${song.cover}" alt="Cover" class="w-11 h-11 rounded-xl object-cover flex-shrink-0">
+                        <img src="${song.cover}" alt="Cover" class="w-10 h-10 rounded-xl object-cover flex-shrink-0">
                         <div class="truncate">
                             <h4 class="text-xs font-semibold ${isActive ? 'text-purple-300' : 'text-slate-200'} truncate">${song.title}</h4>
-                            <p class="text-[11px] text-slate-400 truncate mt-0.5">${song.artist}</p>
+                            <p class="text-[10px] text-slate-400 truncate">${song.artist}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
                         ${isActive && isPlaying ? `
-                            <div class="flex items-end gap-0.5 h-4 px-1">
-                                <span class="w-1 bg-purple-400 animate-[bounce_1s_infinite_100ms] h-full rounded-full"></span>
-                                <span class="w-1 bg-purple-400 animate-[bounce_1s_infinite_300ms] h-2/3 rounded-full"></span>
-                                <span class="w-1 bg-purple-400 animate-[bounce_1s_infinite_200ms] h-4/5 rounded-full"></span>
+                            <div class="flex items-end gap-0.5 h-3 px-1">
+                                <span class="w-0.5 bg-purple-400 animate-[bounce_1s_infinite_100ms] h-full rounded-full"></span>
+                                <span class="w-0.5 bg-purple-400 animate-[bounce_1s_infinite_300ms] h-2/3 rounded-full"></span>
+                                <span class="w-0.5 bg-purple-400 animate-[bounce_1s_infinite_200ms] h-4/5 rounded-full"></span>
                             </div>
                         ` : ''}
-                        <button class="w-8 h-8 rounded-full flex items-center justify-center ${isActive ? 'text-purple-400' : 'text-slate-500 hover:text-slate-300'}">
-                            <i class="fa-solid ${isActive && isPlaying ? 'fa-pause' : 'fa-play'} text-xs"></i>
+                        <button class="w-7 h-7 rounded-full flex items-center justify-center ${isActive ? 'text-purple-300' : 'text-slate-500 hover:text-slate-300'}">
+                            <i class="fa-solid ${isActive && isPlaying ? 'fa-pause' : 'fa-play'} text-[10px]"></i>
                         </button>
                     </div>
                 `;
 
-                item.addEventListener('click', () => {
-                    if (currentSongIndex === index) {
+                card.addEventListener('click', () => {
+                    if (currentSongIndex === realIndex) {
                         togglePlay();
                     } else {
-                        loadSong(index, true);
+                        loadSong(realIndex, true);
                     }
                 });
 
-                playlistItemsEl.appendChild(item);
+                playlistContainer.appendChild(card);
             });
         }
 
-        /**
-         * Load Song into Player
-         */
         function loadSong(index, shouldPlay = false, savedTime = 0) {
             currentSongIndex = index;
             const song = SONGS[currentSongIndex];
 
-            currentTitleEl.textContent = song.title;
-            currentArtistEl.textContent = song.artist;
-            currentCoverEl.src = song.cover;
+            songTitleEl.textContent = song.title;
+            songArtistEl.textContent = song.artist;
+            songCoverEl.src = song.cover;
             audio.src = song.src;
 
-            renderPlaylist();
+            // MediaSession API for Native Lockscreen / App Background Controls
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: song.title,
+                    artist: song.artist,
+                    album: "BeHocCong-1-to-20",
+                    artwork: [{ src: song.cover, sizes: '512x512', type: 'image/jpeg' }]
+                });
 
-            // Set saved playback time if available
+                navigator.mediaSession.setActionHandler('play', playSong);
+                navigator.mediaSession.setActionHandler('pause', pauseSong);
+                navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+                navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+            }
+
+            renderPlaylist(searchInput.value);
+
             if (savedTime > 0) {
                 audio.currentTime = savedTime;
             }
@@ -397,38 +555,29 @@
             }
         }
 
-        /**
-         * Play Song
-         */
         function playSong() {
             isPlaying = true;
             audio.play().then(() => {
                 playIcon.className = "fa-solid fa-pause text-2xl";
-                cdDisc.classList.remove('paused-cd');
-                playingIndicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Đang phát`;
-                playingIndicator.className = "inline-flex items-center gap-2 text-xs font-medium text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 mb-3";
-                renderPlaylist();
+                cdDisc.classList.remove('paused-vinyl');
+                statusPill.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Đang phát`;
+                statusPill.className = "inline-flex items-center gap-2 text-[11px] font-medium text-emerald-300 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 mb-3";
+                renderPlaylist(searchInput.value);
             }).catch(err => {
-                console.log("Autoplay failed or audio blocked:", err);
+                console.log("Autoplay blocked or waiting user gesture:", err);
             });
         }
 
-        /**
-         * Pause Song
-         */
         function pauseSong() {
             isPlaying = false;
             audio.pause();
             playIcon.className = "fa-solid fa-play text-2xl ml-1";
-            cdDisc.classList.add('paused-cd');
-            playingIndicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Đang tạm dừng`;
-            playingIndicator.className = "inline-flex items-center gap-2 text-xs font-medium text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mb-3";
-            renderPlaylist();
+            cdDisc.classList.add('paused-vinyl');
+            statusPill.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Tạm dừng`;
+            statusPill.className = "inline-flex items-center gap-2 text-[11px] font-medium text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mb-3";
+            renderPlaylist(searchInput.value);
         }
 
-        /**
-         * Toggle Play / Pause
-         */
         function togglePlay() {
             if (isPlaying) {
                 pauseSong();
@@ -437,9 +586,6 @@
             }
         }
 
-        /**
-         * Next Song
-         */
         function nextSong() {
             if (isShuffle) {
                 let randomIndex;
@@ -453,22 +599,15 @@
             loadSong(currentSongIndex, true);
         }
 
-        /**
-         * Previous Song
-         */
         function prevSong() {
             if (audio.currentTime > 5) {
                 audio.currentTime = 0;
                 return;
             }
-
             currentSongIndex = (currentSongIndex - 1 + SONGS.length) % SONGS.length;
             loadSong(currentSongIndex, true);
         }
 
-        /**
-         * Save state to LocalStorage
-         */
         function saveState() {
             const state = {
                 songIndex: currentSongIndex,
@@ -480,9 +619,6 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
 
-        /**
-         * Restore state from LocalStorage
-         */
         function restoreState() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (!saved) {
@@ -512,18 +648,19 @@
 
                 loadSong(currentSongIndex, false, state.currentTime || 0);
             } catch (e) {
-                console.error("Error restoring player state", e);
                 loadSong(0, false);
             }
         }
 
-        // Audio Time Update Event
+        /* ====================================================================
+           4. EVENT LISTENERS & AUDIO EVENTS
+           ==================================================================== */
         audio.addEventListener('timeupdate', () => {
             if (!isNaN(audio.duration) && audio.duration > 0) {
                 const progressPercent = (audio.currentTime / audio.duration) * 100;
                 progressBar.value = progressPercent;
                 
-                progressBar.style.background = `linear-gradient(to right, #a855f7 0%, #a855f7 ${progressPercent}%, rgba(255,255,255,0.1) ${progressPercent}%, rgba(255,255,255,0.1) 100%)`;
+                progressBar.style.background = `linear-gradient(to right, #a78bfa 0%, #a78bfa ${progressPercent}%, rgba(255,255,255,0.1) ${progressPercent}%, rgba(255,255,255,0.1) 100%)`;
 
                 currentTimeEl.textContent = formatTime(audio.currentTime);
                 totalDurationEl.textContent = formatTime(audio.duration);
@@ -534,12 +671,10 @@
             }
         });
 
-        // Audio Duration Change
         audio.addEventListener('loadedmetadata', () => {
             totalDurationEl.textContent = formatTime(audio.duration);
         });
 
-        // Song Ended Event
         audio.addEventListener('ended', () => {
             if (isLoop) {
                 audio.currentTime = 0;
@@ -549,7 +684,6 @@
             }
         });
 
-        // Seek Progress Bar
         progressBar.addEventListener('input', (e) => {
             if (!isNaN(audio.duration)) {
                 const seekTime = (e.target.value / 100) * audio.duration;
@@ -559,7 +693,6 @@
             }
         });
 
-        // Volume Change Event
         volumeBar.addEventListener('input', (e) => {
             const val = parseFloat(e.target.value);
             audio.volume = val;
@@ -577,7 +710,6 @@
             }
         }
 
-        // Mute Button Toggle
         btnMute.addEventListener('click', () => {
             if (audio.volume > 0) {
                 lastVolume = audio.volume;
@@ -585,14 +717,13 @@
                 volumeBar.value = 0;
                 updateVolumeIcon(0);
             } else {
-                audio.volume = lastVolume || 0.8;
+                audio.volume = lastVolume || 0.85;
                 volumeBar.value = audio.volume;
                 updateVolumeIcon(audio.volume);
             }
             saveState();
         });
 
-        // Shuffle Toggle
         btnShuffle.addEventListener('click', () => {
             isShuffle = !isShuffle;
             btnShuffle.classList.toggle('text-purple-400', isShuffle);
@@ -600,7 +731,6 @@
             saveState();
         });
 
-        // Loop Toggle
         btnLoop.addEventListener('click', () => {
             isLoop = !isLoop;
             btnLoop.classList.toggle('text-purple-400', isLoop);
@@ -608,15 +738,17 @@
             saveState();
         });
 
-        // Control Buttons Click
         btnPlay.addEventListener('click', togglePlay);
         btnNext.addEventListener('click', nextSong);
         btnPrev.addEventListener('click', prevSong);
 
-        // Keyboard Shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
+        searchInput.addEventListener('input', (e) => {
+            renderPlaylist(e.target.value);
+        });
 
+        // Keyboard Navigation Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
             switch (e.code) {
                 case 'Space':
                     e.preventDefault();
@@ -637,7 +769,52 @@
             }
         });
 
-        // Initialize Player on Window Load
+        /* ====================================================================
+           5. PWA STANDALONE & INSTALLATION HANDLERS
+           ==================================================================== */
+        
+        // Detect if app is running in Standalone App Mode (Installed PWA)
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                             window.navigator.standalone === true;
+
+        if (isStandalone) {
+            appModeBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Standalone App Active`;
+            btnInstallPWA.classList.add('hidden');
+            btnIosGuide.classList.add('hidden');
+        }
+
+        // Chrome/Android PWA Install Prompt listener
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            btnInstallPWA.classList.remove('hidden');
+        });
+
+        btnInstallPWA.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    btnInstallPWA.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // iOS Modal Open / Close
+        btnIosGuide.addEventListener('click', () => {
+            iosModal.classList.remove('hidden');
+        });
+
+        btnCloseIosModal.addEventListener('click', () => {
+            iosModal.classList.add('hidden');
+        });
+
+        btnUnderstand.addEventListener('click', () => {
+            iosModal.classList.add('hidden');
+        });
+
+        // Window Initializer
         window.onload = function() {
             restoreState();
         };
